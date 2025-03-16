@@ -129,4 +129,24 @@ app.get("/room/:slug", async function (req, res) {
     room,
   });
 });
+
+// Add new endpoint to get all rooms
+app.get("/rooms", async function (req, res) {
+  try {
+    const rooms = await prismaClient.room.findMany({
+      orderBy: {
+        id: "desc"
+      }
+    });
+    res.json({
+      rooms,
+    });
+  } catch (e) {
+    res.status(500).json({
+      message: "Error fetching rooms",
+      error: e
+    });
+  }
+});
+
 app.listen(3003);

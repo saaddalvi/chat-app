@@ -27,6 +27,10 @@ export interface CardProps {
    * Additional CSS class names
    */
   className?: string;
+  /**
+   * Children content to render inside the card
+   */
+  children?: ReactNode;
 }
 
 export const Card = ({
@@ -36,6 +40,7 @@ export const Card = ({
   iconColor = "blue",
   footer,
   className = "",
+  children,
 }: CardProps) => {
   return (
     <div className={`card ${className}`}>
@@ -46,6 +51,9 @@ export const Card = ({
       )}
       <h3 className="card-title">{title}</h3>
       <p className="card-text">{description}</p>
+      
+      {children}
+      
       {footer && <div className="button-container">{footer}</div>}
 
       <style>
