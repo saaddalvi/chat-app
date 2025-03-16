@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Card } from "@repo/ui/card";
 import { Button } from "@repo/ui/button";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 
 export default function CreateRoom() {
@@ -26,20 +27,21 @@ export default function CreateRoom() {
         return;
       }
 
-      const response = await fetch("http://localhost:3003/room", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ name: roomName }),
-      });
+      const response = await axios.post("http://localhost:3003/room", 
+        { name: roomName },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          }
+        }
+      );
 
-      const data = await response.json();
-
-      if (response.ok) {
-        // Navigate to the created room
-        router.push(`/room/${roomName}`);
+      // Adjust the response handling 
+      const data = response.data;
+      if (response.status === 200 || response.status === 201) {
+        // Navigate rooms page
+        router.push(`/rooms`);
       } else {
         setError(data.message || "Failed to create room");
       }
@@ -61,7 +63,7 @@ export default function CreateRoom() {
             xmlns="http://www.w3.org/2000/svg" 
             width="32" 
             height="32" 
-            viewBox="0 0 24 24" 
+            viewBox="0 0 24 24"   
             fill="none" 
             stroke="currentColor" 
             strokeWidth="2" 

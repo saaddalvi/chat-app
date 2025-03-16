@@ -1,20 +1,24 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useSocket } from "../hooks/useSocket";
 
 export function ChatRoomClient({
   messages,
-  id,
+  id
 }: {
   messages: { message: string }[];
-  id: string; 
+  id: string;
 }) {
   const [chats, setChats] = useState(messages);
   const [currentMessage, setCurrentMessage] = useState("");
   const { socket, loading } = useSocket();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const roomName = pathname.split("/").pop();
+
   // Scroll to bottom whenever messages change
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -23,7 +27,6 @@ export function ChatRoomClient({
   useEffect(() => {
     scrollToBottom();
   }, [chats]);
-
   useEffect(() => {
     if (socket && !loading) {
       socket.send(
@@ -177,10 +180,10 @@ export function ChatRoomClient({
       
       <div className="chatContainer">
         <div className="chatHeader">
-          <h2>Chat Room</h2>
+          <h2>Chat Room: {roomName}</h2>
         </div>
         
-        <div className="messagesContainer">
+        <div className="messagesContainer"> 
           {chats.map((m, index) => (
             <div key={index} className="messageWrapper">
               <div className="messageContent">

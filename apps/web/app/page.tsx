@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import { Button } from "@repo/ui/button";
 import { Card } from "@repo/ui/card";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -64,9 +66,19 @@ export default function Home() {
             }
             iconColor="blue"
             footer={
-              <Button variant="primary" size="medium">
-                Create Room
-              </Button>
+                <Button 
+                  variant="primary" 
+                  size="medium" 
+                  onClick={() => {
+                    if (isLoggedIn) {
+                      router.push("/create-room");
+                    } else {
+                      router.push("/signin");
+                    }
+                  }}
+                >
+                  Create Room
+                </Button>
             }
           />
 
@@ -81,8 +93,15 @@ export default function Home() {
             }
             iconColor="purple"
             footer={
-              <Button variant="secondary" size="medium">
-                Join Room
+              <Button variant="primary" size="medium"
+              onClick={() => {
+                if (isLoggedIn) {
+                  router.push("/join-room");
+                } else {
+                  router.push("/signin");
+                }
+              }}>
+                Join Room 
               </Button>
             }
           />
@@ -98,7 +117,14 @@ export default function Home() {
             }
             iconColor="green"
             footer={
-              <Button variant="success" size="medium">
+              <Button variant="primary" size="medium"
+              onClick={() => {
+                if (isLoggedIn) {
+                  router.push("/rooms");
+                } else {
+                  router.push("/signin");
+                }
+              }}>
                 Browse Rooms
               </Button>
             }
