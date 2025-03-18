@@ -35,7 +35,7 @@ export default function Home() {
                 Sign Out
               </Button>
             ) : (
-              <Button variant="primary" size="medium">
+              <Button variant="primary" size="medium" onClick={() => router.push("/signin")}>
                 <Link href="/signin">Sign In</Link>
               </Button>
             )}

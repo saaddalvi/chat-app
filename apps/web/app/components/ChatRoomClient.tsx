@@ -16,7 +16,6 @@ export function ChatRoomClient({
   const { socket, loading } = useSocket();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const roomName = pathname.split("/").pop();
 
   // Scroll to bottom whenever messages change
@@ -38,11 +37,20 @@ export function ChatRoomClient({
       socket.onmessage = (event) => {
         const parsedData = JSON.parse(event.data);
         setChats((c) => [...c, { message: parsedData.message }]);
+        scrollToBottom(); // Ensure UI scrolls to the latest message
       };
     }
-    // return () => {
-    //   socket?.close();
-    // };
+
+    return () => {
+      if (socket) {
+        socket.send(
+          JSON.stringify({
+            type: "leave_room",
+            roomId: id,
+          })
+        );
+      }
+    };
   }, [socket, loading]);
 
   const sendMessage = () => {
